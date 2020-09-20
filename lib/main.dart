@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import './question.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -12,13 +14,13 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  var questionIndex = 0;
+  var _questionIndex = 0;
 
   void answerQuestion() {
     setState(() {
-      questionIndex++;
+      _questionIndex++;
     });
-    print(questionIndex);
+    print(_questionIndex);
   }
 
   @override
@@ -30,11 +32,13 @@ class MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Mijn eerste applicatie'),
+          title: Text('Super Sexy Jeroen App'),
         ),
         body: Column(
           children: [
-            Text(quizQuestions[questionIndex]),
+            Question(
+              quizQuestions[_questionIndex],
+            ),
             RaisedButton(
               child: Text('Antwoord 1'),
               onPressed: () => print('Antwoord 1 gekozen!'),
