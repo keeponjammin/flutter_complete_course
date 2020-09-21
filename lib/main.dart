@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import './question.dart';
-import './answer.dart';
+import './quiz.dart';
+import './result.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,27 +15,52 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  final quizQuestions = const [
+  final _quizQuestions = const [
     {
       'questionText': 'Wat is het beste huisdier?',
-      'answers': ['Cavia', 'Kat', 'Hond', 'Olifant']
+      'answers': [
+        {'text': 'Cavia', 'score': 4},
+        {'text': 'Hond', 'score': 1},
+        {'text': 'Kat', 'score': 2},
+        {'text': 'Olifant', 'score': 3},
+      ]
     },
     {
       'questionText': 'Wat is de beste programmeertaal?',
-      'answers': ['Dart', 'C#', 'PHP', 'JavaScript']
+      'answers': [
+        {'text': 'C#', 'score': 4},
+        {'text': 'Dart', 'score': 3},
+        {'text': 'PHP', 'score': 1},
+        {'text': 'JavaScript', 'score': 2},
+      ]
     },
     {
       'questionText': 'Wie kan het niet laten mij te onderbreken tijdens werk?',
-      'answers': ['Martine', 'Martine', 'Martine', 'Martine']
+      'answers': [
+        {'text': 'Martine', 'score': 4},
+        {'text': 'Martine', 'score': 4},
+        {'text': 'Martine', 'score': 4},
+        {'text': 'Martine', 'score': 4},
+      ]
     },
   ];
   var _questionIndex = 0;
+  var _totalScore = 0;
 
-  void _answerQuestion() {
+  void _resetQuiz() {
+    setState(() {
+      _questionIndex = 0;
+      _totalScore = 0;
+    });
+  }
+
+  void _answerQuestion(int score) {
+    _totalScore += score;
+
     setState(() {
       _questionIndex++;
     });
-    if (_questionIndex < quizQuestions.length) {
+    if (_questionIndex < _quizQuestions.length) {
       print('We have more questions!');
     } else {
       print('We zijn klaar!');
@@ -49,21 +74,13 @@ class MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: Text('Super Sexy Jeroen App'),
         ),
-        body: _questionIndex < quizQuestions.length
-            ? Column(
-                children: [
-                  Question(
-                    quizQuestions[_questionIndex]['questionText'],
-                  ),
-                  ...(quizQuestions[_questionIndex]['answers'] as List<String>)
-                      .map((answer) {
-                    return Answer(_answerQuestion, answer);
-                  }).toList(),
-                ],
+        body: _questionIndex < _quizQuestions.length
+            ? Quiz(
+                answerQuestion: _answerQuestion,
+                questionIndex: _questionIndex,
+                quizQuestions: _quizQuestions,
               )
-            : Center(
-                child: Text('Goed gedaan!'),
-              ),
+            : Result(_totalScore, _resetQuiz),
       ),
     );
   }
